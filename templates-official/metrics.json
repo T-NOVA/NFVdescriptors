@@ -162,7 +162,63 @@
       "unit": "INT"
     },
   ],
-  "vSA": [
+   "vSA": [
+    {
+      "metric": "vsa_pfsense_cpu",
+      "desc": "Cpu usage of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_mem",
+      "desc": "Memory usage of  pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_dis",
+      "desc": "Hardware usage of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_load_avg",
+      "desc": "Average load of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_pfstate",
+      "desc": "state table size of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_uptime",
+      "desc": "Up time of pfsense",
+      "unit": "STRING"
+    },
+    {
+      "metric": "vsa_snort_cpu",
+      "desc": "Cpu usage of snort",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_snort_memory",
+      "desc": "Memory usage of snort",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_snort_pkt_drop_percent",
+      "desc": "Percent of the dropped packets, generate by snort",
+      "unit": "INT"
+    },
+    {
+      "metric": "vsa_snort_alerts_per_second",
+      "desc": "The number of alerts per second, that are made by snort",
+      "unit": "INT"
+    },
+    {
+      "metric": "vsa_snort_kpackets_per_sec.realtime",
+      "desc": "How many thousands of Packets per second in realtime through  vsa, generate by snort",
+      "unit": "FLOAT"
+    }
+
   ],
   "vPXAAS": [
     {
