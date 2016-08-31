@@ -110,9 +110,34 @@
       "unit": "%"
     },
     {
-      "metric": "cpu",
+      "metric": "disk",
       "desc": "Storage Free",
       "unit": "%"
+    },
+    {
+      "metric": "memfree",
+      "desc": "Memory Free",
+      "unit": "MB"
+    },
+    {
+      "metric": "fsfree",
+      "desc": "Storage Free",
+      "unit": "GB"
+    },
+    {
+      "metric": "tu_running",
+      "desc": "transcoding process number in progress",
+      "unit": "INT"
+    },
+    {
+      "metric": "bitrate",
+      "desc": "transcoding process total bitrate",
+      "unit": "kbits/s"
+    },
+    {
+      "metric": "framerate",
+      "desc": "transcoding process total framerate",
+      "unit": "frame/s"
     }
   ],
   "vHG": [
