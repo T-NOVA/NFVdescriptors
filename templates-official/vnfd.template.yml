@@ -130,8 +130,8 @@ vnf:
 
       vlink:
         # T-NOVA VL Section : relative to resources:networks HEAT template, subnets and dns information should be filled from the Orchestrator therefore are not put here. 
-        - vl_id: "mngt"
-          connectivity_type: "E-Line"
+        - vl_id: "mngt" #Called alias in the Marketplace
+          connectivity_type: "E-Line" #Link type 
           connection_points_reference: ["vdu0:mngt0", "vnf0:mngt0"]
           root_requirement: "10Gbps"
           leaf_requirement: "10Gbps" # Used only for E-tree
