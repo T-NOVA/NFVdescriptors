@@ -1,0 +1,857 @@
+billing_model:
+  model: RS
+  period: ''
+  price:
+    max_per_period: 1
+    min_per_period: 1
+    setup: 1
+    unit: EUR
+created_at: '2016-09-27T08:20:10Z'
+deployment_flavours:
+- assurance_parameters:
+  - formula: transcoding_score GT 300
+    id: transcoding_score
+    penalty:
+      expression: 0
+      type: Discount
+      unit: INT
+      validity: P1D
+    rel_id: param0
+    unit: INT
+    value: 300
+    violation:
+    - breaches_count: 2
+      interval: 1
+  - formula: transcoding_score LT 10
+    id: transcoding_score
+    penalty:
+      expression: 0
+      type: Discount
+      unit: INT
+      validity: P1W
+    rel_id: param1
+    unit: INT
+    value: 10
+    violation:
+    - breaches_count: 0
+      interval: 360
+  constraint: ''
+  flavour_key: gold
+  id: flavor0
+  vdu_reference:
+  - vdu0
+  - vdu1
+  - vdu2
+  - vdu3
+  - vdu4
+  - vdu5
+  vlink_reference:
+  - vl0
+  - vl1
+  - vl2
+description: VHG_VIOTECH_16_09_27__10H30
+descriptor_version: '1'
+id: 2507
+modified_at: '2016-09-27T08:20:10Z'
+name: VHG_VIOTECH_16_09_27__10H30
+provider: Viotech
+provider_id: 10
+release: T-NOVA
+trade: false
+type: vHG
+vdu:
+- alias: controller
+  bootstrap_script: "#!/usr/bin/env bash \nwget https://raw.githubusercontent.com/dngroup/t-nova/master/controller/vanilla\
+    \  -O /root/start  ;  chmod +x /root/start \nwget https://raw.githubusercontent.com/dngroup/t-nova/master/controller/scaling/worker/vanilla\
+    \  -O /root/scalingout  ;  chmod +x /root/scalingout"
+  connection_points:
+  - id: CP0mxm
+    vlink_ref: vl0
+  - id: CPudhr
+    vlink_ref: vl2
+  controller: true
+  id: vdu0
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 11
+      size_unit: GB
+    vcpus: 2
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 1
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+- alias: VHG
+  bootstrap_script: "#!/usr/bin/env bash \necho 'echo $(date) > /root/snitch.start\
+    \ && echo $1 > start.txt' > /root/start; chmod +x /root/start \necho 'echo $(date)\
+    \ > /root/snitch.stop && echo $1 > end.txt' > /root/stop; chmod +x /root/stop\
+    \ \necho 'echo $(date) > /root/snitch.scalingIn && echo $1 > scalingIn.txt' >\
+    \ /root/scalingIn; chmod +x /root/scalingIn \necho 'echo $(date) > /root/snitch.scalingout\
+    \ && echo $1 > scalingout.txt' > /root/scalingout; chmod +x /root/scalingout"
+  connection_points:
+  - id: CPb9gy
+    vlink_ref: vl0
+  - id: CPjb7x
+    vlink_ref: vl2
+  controller: false
+  id: vdu1
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 11
+      size_unit: GB
+    vcpus: 1
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 1
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+- alias: Frontend
+  bootstrap_script: "#!/usr/bin/env bash \necho 'echo $(date) > /root/snitch.start\
+    \ && echo $1 > start.txt' > /root/start; chmod +x /root/start \necho 'echo $(date)\
+    \ > /root/snitch.stop && echo $1 > end.txt' > /root/stop; chmod +x /root/stop\
+    \ \necho 'echo $(date) > /root/snitch.scalingIn && echo $1 > scalingIn.txt' >\
+    \ /root/scalingIn; chmod +x /root/scalingIn \necho 'echo $(date) > /root/snitch.scalingout\
+    \ && echo $1 > scalingout.txt' > /root/scalingout; chmod +x /root/scalingout"
+  connection_points:
+  - id: CPdmwt
+    vlink_ref: vl0
+  - id: CPoq74
+    vlink_ref: vl1
+  - id: CPr3k7
+    vlink_ref: vl2
+  controller: false
+  id: vdu2
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 11
+      size_unit: GB
+    vcpus: 1
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 1
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+- alias: vCDN1
+  bootstrap_script: "#!/usr/bin/env bash \necho 'echo $(date) > /root/snitch.start\
+    \ && echo $1 > start.txt' > /root/start; chmod +x /root/start \necho 'echo $(date)\
+    \ > /root/snitch.stop && echo $1 > end.txt' > /root/stop; chmod +x /root/stop\
+    \ \necho 'echo $(date) > /root/snitch.scalingIn && echo $1 > scalingIn.txt' >\
+    \ /root/scalingIn; chmod +x /root/scalingIn \necho 'echo $(date) > /root/snitch.scalingout\
+    \ && echo $1 > scalingout.txt' > /root/scalingout; chmod +x /root/scalingout"
+  connection_points:
+  - id: CP4jm9
+    vlink_ref: vl0
+  - id: CPob0m
+    vlink_ref: vl1
+  controller: false
+  id: vdu3
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 20
+      size_unit: GB
+    vcpus: 1
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 1
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+- alias: vCDN2
+  bootstrap_script: "#!/usr/bin/env bash \necho 'echo $(date) > /root/snitch.start\
+    \ && echo $1 > start.txt' > /root/start; chmod +x /root/start \necho 'echo $(date)\
+    \ > /root/snitch.stop && echo $1 > end.txt' > /root/stop; chmod +x /root/stop\
+    \ \necho 'echo $(date) > /root/snitch.scalingIn && echo $1 > scalingIn.txt' >\
+    \ /root/scalingIn; chmod +x /root/scalingIn \necho 'echo $(date) > /root/snitch.scalingout\
+    \ && echo $1 > scalingout.txt' > /root/scalingout; chmod +x /root/scalingout"
+  connection_points:
+  - id: CPqd5h
+    vlink_ref: vl0
+  - id: CPyxdx
+    vlink_ref: vl1
+  controller: false
+  id: vdu4
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 20
+      size_unit: GB
+    vcpus: 1
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 1
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+- alias: Worker
+  bootstrap_script: "#!/usr/bin/env bash \necho 'echo $(date) > /root/snitch.start\
+    \ && echo $1 > start.txt' > /root/start; chmod +x /root/start \necho 'echo $(date)\
+    \ > /root/snitch.stop && echo $1 > end.txt' > /root/stop; chmod +x /root/stop\
+    \ \necho 'echo $(date) > /root/snitch.scalingIn && echo $1 > scalingIn.txt' >\
+    \ /root/scalingIn; chmod +x /root/scalingIn \necho 'echo $(date) > /root/snitch.scalingout\
+    \ && echo $1 > scalingout.txt' > /root/scalingout; chmod +x /root/scalingout"
+  connection_points:
+  - id: CPta2m
+    vlink_ref: vl0
+  - id: CPsx4l
+    vlink_ref: vl1
+  controller: false
+  id: vdu5
+  monitoring_parameters:
+  - desc: CPU Idle
+    metric: cpuidle
+    unit: '%'
+  - desc: CPU Utilization
+    metric: cpu_util
+    unit: '%'
+  - desc: Free Storage
+    metric: fsfree
+    unit: GB
+  - desc: Free Memory
+    metric: memfree
+    unit: MB
+  - desc: Network Incoming
+    metric: network_incoming
+    unit: Mbps
+  - desc: Network Outgoing
+    metric: network_outgoing
+    unit: Mbps
+  - desc: Load Average (1 Minute)
+    metric: load_shortterm
+    unit: '%'
+  - desc: Load Average (5 Minutes)
+    metric: load_midterm
+    unit: '%'
+  - desc: Load Average (15 Minutes)
+    metric: load_longterm
+    unit: '%'
+  - desc: Blocked Processes
+    metric: processes_blocked
+    unit: INT
+  - desc: Paging Processes
+    metric: processes_paging
+    unit: INT
+  - desc: Running Processes
+    metric: processes_running
+    unit: INT
+  - desc: Sleeping Processes
+    metric: processes_sleeping
+    unit: INT
+  - desc: Stopped Processes
+    metric: processes_stopped
+    unit: INT
+  - desc: Zombie Processes
+    metric: processes_zombie
+    unit: INT
+  monitoring_parameters_specific:
+  - desc: Number of objects in the repository
+    metric: object
+    unit: INT
+  - desc: Size of the object repository
+    metric: size
+    unit: INT
+  - desc: Requests per minute in the VHG
+    metric: rpm
+    unit: INT
+  - desc: Hits per minute in the VHG
+    metric: hpm
+    unit: INT
+  networking_resources: ''
+  resource_requirements:
+    cpu_support_accelerator: AES-NI
+    data_processing_acceleration_library: ''
+    hypervisor_parameters:
+      type: QEMU-KVM
+      version: 10002|12001|2.6.32-358.el6.x86_64
+    memory: 2
+    memory_parameters:
+      large_pages_required: false
+      numa_allocation_policy: ''
+    memory_unit: GB
+    network_interface_bandwidth: ''
+    network_interface_bandwidth_unit: ''
+    network_interface_card_capabilities:
+      SR-IOV: true
+      mirroring: false
+    platform_pcie_parameters:
+      SR-IOV: true
+      device_pass_through: true
+    storage:
+      persistence: false
+      size: 11
+      size_unit: GB
+    vcpus: 2
+    vswitch_capabilities:
+      overlay_tunnel: GRE
+      type: ovs
+      version: '2.0'
+  scale_in_out:
+    maximum: 10
+    minimum: 1
+  vm_image: http://10.10.1.167:8080/NFS/files/vhg.qcow2
+  vm_image_format: qcow2
+  vm_image_md5: a78c7c73ceb2feeb20d8cd82a4f97da3
+  wc_notify: true
+version: '1'
+vlinks:
+- access: false
+  alias: management
+  connection_points_reference:
+  - CP0mxm
+  - CPb9gy
+  - CPdmwt
+  - CP4jm9
+  - CPqd5h
+  - CPta2m
+  connectivity_type: E-LINE
+  dhcp: true
+  external_access: true
+  id: vl0
+  leaf_requirement: Unlimited
+  port_security_enabled: false
+  qos: ''
+  root_requirement: Unlimited
+  vdu_reference:
+  - vdu0
+  - vdu1
+  - vdu2
+  - vdu3
+  - vdu4
+  - vdu5
+- access: false
+  alias: data
+  connection_points_reference:
+  - CPoq74
+  - CPob0m
+  - CPyxdx
+  - CPsx4l
+  connectivity_type: E-LINE
+  dhcp: true
+  external_access: true
+  id: vl1
+  leaf_requirement: Unlimited
+  port_security_enabled: false
+  qos: ''
+  root_requirement: Unlimited
+  vdu_reference:
+  - vdu2
+  - vdu3
+  - vdu4
+  - vdu5
+- access: true
+  alias: external
+  connection_points_reference:
+  - CPudhr
+  - CPjb7x
+  - CPr3k7
+  connectivity_type: E-LINE
+  dhcp: true
+  external_access: true
+  id: vl2
+  leaf_requirement: Unlimited
+  port_security_enabled: false
+  qos: ''
+  root_requirement: Unlimited
+  vdu_reference:
+  - vdu0
+  - vdu1
+  - vdu2
+vnf_lifecycle_events:
+- authentication: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEpQIBAAKCAQEAvJC3ZJCJttVPZfiwd/r0xki6yvrHXyWAaqHJfz8MtPR9FM8V
+
+    QyqAr/Kh5dthq+jB3/fMYOFyH1JZULiBSDXsnXr/38oa6qkBTZWE4mMWtSvoNzBx
+
+    QhCt906X3eYHsUNmjUbOMWUH2EKncYBdf2cO/faXMMCh9ESi85N4rSus1fLAvWtX
+
+    W683PfjJQ7WTYMV7ThYqyc0e9afZAnGWQDy9o6gmYrc68GVEdbONPwMstUkP+Z9s
+
+    s5o4JdtjlZcppjGEAJU+yuCdpX8emdnBEU2Q7hGpgp8p63SIuSQ9vV9v0NChj5Q4
+
+    8HCrZIkBWe2fpA4TWMMkW9P+y4mrf/czo6eeeQIDAQABAoIBAQCoYaoCOTdgdpaR
+
+    /kLGwOg279ctTkceZYSIs7QU1p5oMDJJlKnt8lQ7ybRcZ0yOkCgf8U0l7etUoNp0
+
+    xG1dqBmEfsNieT0T8prhRvUEm2s5mN2h+rYIQpC2WA4w7ipMVl2LJoEVhpw8tziC
+
+    mBflnoe6rKpRtJJqZ6gDTdri+C88VCK9vJNkTXx8Mg+Vol3/2U6hCNjcULLuHq45
+
+    m9BJwIpOLEVY4VKhb24C9hIU7wkDk+4D7y8D8rdbWLpmQGZ3Bc+tL4kTB8Mt7QhL
+
+    Tu4vWP2WKnocFAkkpQTJ2yiEC7A6NhbsNqXcgWIfJ1y9Be6ccu9k7TqQHKM9I0zH
+
+    e29nWPHJAoGBAONVYU6m9+C8a2rH2dZKO6i/R+AoKYVzKQomWq7DYoFzN5sA1v+D
+
+    9YxaEP+1nmgIP805RALd51ie+Ald/g0Y8t62odN2aMW19jtAINgj4lRoNcxjh75t
+
+    SgS3hLwhwQil84SXAEijZYpMmdHjziydE3yNXT8Z/M68toJRpL38nV7vAoGBANRX
+
+    2RsDbze83fSmfd+0ztuIXDc9JtgqV/qp95ezO0/jdLy9AD8NEKFgcb0OWE9lG5dj
+
+    aa/4JOQjJGI6Eg1tcQJ8aK3NHG9EDnAyWN4EMhxxzmOq43+3mf71dCL5n8025Fot
+
+    Nnuw96SRnZOd1LfhB0IQAzO4QD8oznsIH6ssrVkXAoGBAMz3gSmaD2o4WB1JnZXB
+
+    DnNCK3rmmzEwOLNnC2IA1gLjMCJ4KmDsyGrIFgWH6g/gSC4v0KtJCbp0cix364RB
+
+    l1DIl7WCUErameyoEDTwfbMe1kq2/n/qJ8+C65F4WYQDpEFKqD3V3MpJ8HI2lADT
+
+    iutExesL8k0wBtoO5JtLdVRPAoGALQOWdaCLwjAaiVOGGZdVxrooellPU8HeNrgz
+
+    UYhgSXY5eA1E8RjO7rboRaC13dbcO4KKlBAxmd9NRjlzPD94FoPTGQ0DOx8dRHGX
+
+    3zDagqcpjn1ajueYELFt9kAevT0muWseQqhoRw3LbtClmHlutXV5iExF6l23L+Ov
+
+    +vSUpu8CgYEA0btOwdWmvFIJzNbsUxKGk1dPNdNAs5pXDB6g7KAiMq422lJbVcyv
+
+    q5GGgkK3N9SzvSCxteR6Kdx3iNwBEsKUrOSTZc2J2nCNOZ26c6CKc0wi6cc7FAnA
+
+    YMTbMe8cecI0TI4hxPEEsHdmzZ5YLzhh5e/EOFzGI5aqbSs4M6BXrKw=
+
+    -----END RSA PRIVATE KEY-----'
+  authentication_port: 22
+  authentication_type: PubKeyAuthentication
+  authentication_username: root
+  driver: ssh
+  events:
+    scaling_in:
+      command: /root/scalingin
+      template_file: '{"controller":"get_attr[vdu0,CPudhr,PublicIp]","Worker-data":"get_attr[CPsx4l,fixed_ips,0,ip_address]","Worker-management":"get_attr[CPta2m,fixed_ips,0,ip_address]"}'
+      template_file_format: JSON
+    scaling_out:
+      command: /root/scalingout
+      template_file: '{"controller":"get_attr[vdu0,CPudhr,CPudhr,PublicIp]","Worker-data":"get_attr[CPsx4l,fixed_ips,0,ip_address]","Worker-management":"get_attr[CPta2m,fixed_ips,0,ip_address]"}'
+      template_file_format: JSON
+    start:
+      command: /root/start
+      template_file: '{"controller":"get_attr[vdu0,CPudhr,PublicIp]","controller-Floating":"get_attr[vdu0,CPudhr,PublicIp]","VHG-Floating":"get_attr[vdu1,CPjb7x,PublicIp]","Frontend-Floating":"get_attr[vdu2,CPr3k7,PublicIp]","controller-management":"get_attr[CP0mxm,fixed_ips,0,ip_address]","VHG-management":"get_attr[CPb9gy,fixed_ips,0,ip_address]","Frontend-management":"get_attr[CPdmwt,fixed_ips,0,ip_address]","vCDN1-management":"get_attr[CP4jm9,fixed_ips,0,ip_address]","vCDN2-management":"get_attr[CPqd5h,fixed_ips,0,ip_address]","Worker-management":"get_attr[CPta2m,fixed_ips,0,ip_address]","Frontend-data":"get_attr[CPoq74,fixed_ips,0,ip_address]","vCDN1-data":"get_attr[CPob0m,fixed_ips,0,ip_address]","vCDN2-data":"get_attr[CPyxdx,fixed_ips,0,ip_address]","Worker-data":"get_attr[CPsx4l,fixed_ips,0,ip_address]","controller-external":"get_attr[CPudhr,fixed_ips,0,ip_address]","VHG-external":"get_attr[CPjb7x,fixed_ips,0,ip_address]","Frontend-external":"get_attr[CPr3k7,fixed_ips,0,ip_address]"}'
+      template_file_format: JSON
+    stop:
+      command: /root/stop
+      template_file: '{}'
+      template_file_format: JSON
+  flavor_id_ref: flavor0
+  vnf_container: /root/
+
