@@ -110,34 +110,105 @@
       "unit": "%"
     },
     {
-      "metric": "cpu",
+      "metric": "disk",
       "desc": "Storage Free",
       "unit": "%"
+    },
+    {
+      "metric": "memfree",
+      "desc": "Memory Free",
+      "unit": "MB"
+    },
+    {
+      "metric": "fsfree",
+      "desc": "Storage Free",
+      "unit": "GB"
+    },
+    {
+      "metric": "tu_running",
+      "desc": "transcoding process number in progress",
+      "unit": "INT"
+    },
+    {
+      "metric": "bitrate",
+      "desc": "transcoding process total bitrate",
+      "unit": "kbits/s"
+    },
+    {
+      "metric": "framerate",
+      "desc": "transcoding process total framerate",
+      "unit": "frame/s"
     }
   ],
   "vHG": [
     {
-      "metric": "object",
-      "desc": "Number of objects in the repository",
+      "metric": "transcoding_score",
+      "desc": "Transcoding Score",
       "unit": "INT"
     },
     {
-      "metric": "size",
-      "desc": "Size of the object repository",
-      "unit": "INT"
-    },
-    {
-      "metric": "rpm",
-      "desc": "Requests per minute in the VHG",
-      "unit": "INT"
-    },
-    {
-      "metric": "hpm",
-      "desc": "Hits per minute in the VHG",
-      "unit": "INT"
-    },
+      "metric": "distributed_storage_free_space",
+      "desc": "Distributed storage free space",
+      "unit": "%"
+    }
   ],
-  "vSA": [
+   "vSA": [
+    {
+      "metric": "vsa_pfsense_cpu",
+      "desc": "Cpu usage of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_mem",
+      "desc": "Memory usage of  pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_dis",
+      "desc": "Hardware usage of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_load_avg",
+      "desc": "Average load of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_pfstate",
+      "desc": "state table size of pfsense",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_pfsense_uptime",
+      "desc": "Up time of pfsense",
+      "unit": "STRING"
+    },
+    {
+      "metric": "vsa_snort_cpu",
+      "desc": "Cpu usage of snort",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_snort_memory",
+      "desc": "Memory usage of snort",
+      "unit": "FLOAT"
+    },
+    {
+      "metric": "vsa_snort_pkt_drop_percent",
+      "desc": "Percent of the dropped packets, generate by snort",
+      "unit": "INT"
+    },
+    {
+      "metric": "vsa_snort_alerts_per_second",
+      "desc": "The number of alerts per second, that are made by snort",
+      "unit": "INT"
+    },
+    {
+      "metric": "vsa_snort_kpackets_per_sec.realtime",
+      "desc": "How many thousands of Packets per second in realtime through  vsa, generate by snort",
+      "unit": "FLOAT"
+    }
+
   ],
   "vPXAAS": [
     {
