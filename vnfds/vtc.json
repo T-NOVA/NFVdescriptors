@@ -246,7 +246,7 @@
       "events": {
         "start": {
           "command": "sudo ./vtc/PF_RING/userland/examples/pfbridge -a ath1 -b eth2",
-          "template_file": "{\"controller\":\"get_attr[vdu0,PublicIp]\", \"vdu0\":\"get_attr[vdu1,PublicIp]\"}",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CPvjbn,PublicIp]\", \"vdu0private\":\"get_attr[CPaer9,fixed_ips,0,ip_address]\"}",
           "template_file_format": "JSON"
         },
         "stop": {

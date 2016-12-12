@@ -10,7 +10,10 @@ token = response.json()['token']
 
 #list of descriptors:
 descriptors = [
-	{"type": "proxy", "vnfd": "vnfds/vproxy.json", "nsd": "nsds/vproxy.json"}
+	{"type": "proxy", "vnfd": "vnfds/vproxy.json", "nsd": "nsds/vproxy.json"},
+	{"type": "vtc", "vnfd": "vnfds/vtc.json", "nsd": "nsds/vtc.json"},
+	{"type": "vsbc", "vnfd": "vnfds/vsbc.json", "nsd": "nsds/vsbc.json"},
+	{"type": "vhg", "vnfd": "vnfds/vhg.json", "nsd": "nsds/vhg.json"},
 ]
 
 url = 'http://10.10.1.90/vnfs/'
