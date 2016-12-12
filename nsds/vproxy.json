@@ -1,0 +1,222 @@
+{
+  "nsd": {
+    "name": "ProxyUC_FULL_testing_josep",
+    "vendor": "3",
+    "version": "1",
+    "vnfds": [
+      "<updated_id>"
+    ],
+    "vnffgd": {
+      "vnffgs": [
+        {
+          "vnffg_id": "vnffg0",
+          "number_of_endpoints": 2,
+          "number_of_virtual_links": 2,
+          "dependent_virtual_links": [
+            "vld0",
+            "vld1"
+          ],
+          "network_forwarding_path": [
+            {
+              "nfp_id": "nfp0",
+              "graph": [
+                "vld0",
+                "vld1"
+              ],
+              "connection_points": [
+                "ns_ext_data",
+                "VNF#<updated_id>:ext_data",
+                "ns_ext_mgnt",
+                "VNF#<updated_id>:ext_mgmt"
+              ],
+              "constituent_vnfs": [
+                {
+                  "vnf_ref_id": "<updated_id>",
+                  "vnf_flavor_key_ref": "gold"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "lifecycle_events": {
+      "start": [
+        {
+          "vnf_id": "<updated_id>",
+          "vnf_event": "start",
+          "event_rel_id": "rel_le0",
+          "event_id": "le0",
+          "sla_ref_id": "sla0"
+        }
+      ],
+      "stop": [
+        
+      ],
+      "scale_out": [
+        
+      ],
+      "scale_in": [
+        
+      ]
+    },
+    "vnf_depedency": [
+      
+    ],
+    "monitoring_parameters": [
+      {
+        "desc": "Availability",
+        "metric": "availability",
+        "unit": "%"
+      },
+      {
+        "desc": "End-to-End Bandwidth",
+        "metric": "end-to-end bandwidth",
+        "unit": "Mbps"
+      }
+    ],
+    "vld": {
+      "number_of_endpoints": 0,
+      "virtual_links": [
+        {
+          "vld_id": "vld0",
+          "alias": "data",
+          "root_requirements": "100Mbps",
+          "leaf_requirement": "100Mbps",
+          "qos": {
+            "average": "",
+            "peak": "",
+            "burst": ""
+          },
+          "connections": [
+            "VNF#<updated_id>:ext_data"
+          ],
+          "connectivity_type": "E-LINE",
+          "external_access": true,
+          "merge": false,
+          "sla_ref_id": "sla0"
+        },
+        {
+          "vld_id": "vld1",
+          "alias": "mgnt",
+          "root_requirements": "100Mbps",
+          "leaf_requirement": "100Mbps",
+          "qos": {
+            "average": "",
+            "peak": "",
+            "burst": ""
+          },
+          "connections": [
+            "VNF#<updated_id>:ext_mgmt"
+          ],
+          "connectivity_type": "E-LINE",
+          "external_access": true,
+          "merge": false,
+          "sla_ref_id": "sla0"
+        }
+      ]
+    },
+    "sla": [
+      {
+        "id": "sla0",
+        "assurance_parameters": [
+          {
+            "formula": "MAX(VNF:<updated_id>.cpu_util)",
+            "id": "cpu_util",
+            "name": "cpu_util",
+            "penalty": {
+              "type": "Discount",
+              "unit": "%",
+              "validity": "P1D",
+              "value": 1
+            },
+            "unit": "%",
+            "value": "LT(60)",
+            "violations": [
+              {
+                "breaches_count": 2,
+                "interval": 60
+              }
+            ],
+            "uid": "ap0"
+          },
+          {
+            "formula": "MAX(VNF:<updated_id>.httpnum)",
+            "id": "httpnum",
+            "name": "httpnum",
+            "penalty": {
+              "type": "Discount",
+              "unit": "INT",
+              "validity": "P1D",
+              "value": 1
+            },
+            "unit": "INT",
+            "value": "GT(10)",
+            "violations": [
+              {
+                "breaches_count": 2,
+                "interval": 60
+              }
+            ],
+            "uid": "ap1"
+          },
+          {
+            "formula": "MAX(VNF:<updated_id>.load_shortterm)",
+            "id": "load_shortterm",
+            "name": "load_shortterm",
+            "penalty": {
+              "type": "Discount",
+              "unit": "%",
+              "validity": "P1D",
+              "value": 1
+            },
+            "unit": "%",
+            "value": "LT(70)",
+            "violations": [
+              {
+                "breaches_count": 2,
+                "interval": 60
+              }
+            ],
+            "uid": "ap2"
+          }
+        ],
+        "billing": {
+          "model": "PAYG",
+          "price": {
+            "price_per_period": 4,
+            "setup": 2,
+            "unit": "EUR"
+          }
+        },
+        "constituent_vnf": [
+          {
+            "number_of_instances": 1,
+            "redundancy_model": "Active",
+            "vnf_flavour_id_reference": "gold",
+            "vnf_reference": "<updated_id>"
+          }
+        ],
+        "sla_key": "basic"
+      }
+    ],
+    "auto_scale_policy": {
+      "criteria": [
+        
+      ],
+      "basic": [
+        
+      ]
+    },
+    "connection_points": [
+      
+    ],
+    "vnf_dependency": [
+      
+    ],
+    "provider": "T-Nova",
+    "description": "ProxyUC_FULL",
+    "provider_id": "3",
+    "descriptor_version": "1"
+  }
+}
