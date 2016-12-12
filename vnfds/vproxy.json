@@ -1,4 +1,9 @@
 {
+  "name": "vpxaas_20161211",
+  "provider_id": 4,
+  "descriptor_version": "1",
+  "type": "vPXAAS",
+  "description": "",
   "vdu": [
     {
       "resource_requirements": {
@@ -188,12 +193,7 @@
       "vm_image_format": "qcow2"
     }
   ],
-  "name": "vpxaas_20161211",
-  "created_at": "2016-12-11T12:51:10Z",
-  "modified_at": "2016-12-11T12:51:10Z",
-  "provider_id": 4,
   "trade": false,
-  "descriptor_version": "1",
   "deployment_flavours": [
     {
       "vdu_reference": [
@@ -340,7 +340,5 @@
       "qos": "",
       "id": "vl2"
     }
-  ],
-  "type": "vPXAAS",
-  "description": ""
+  ]
 }
