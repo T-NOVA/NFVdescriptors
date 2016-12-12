@@ -13,7 +13,6 @@ descriptors = [
 	{"type": "proxy", "vnfd": "vnfds/vproxy.json", "nsd": "nsds/vproxy.json"}
 ]
 
-print descriptors
 url = 'http://10.10.1.90/vnfs/'
 headers = {'content-type': 'application/json', 'Authorization': 'JWT ' + token}
 
