@@ -3,6 +3,10 @@
     "name": "ProxyUC_FULL",
     "vendor": "3",
     "version": "1",
+    "provider": "T-Nova",
+    "description": "ProxyUC_FULL",
+    "provider_id": "3",
+    "descriptor_version": "1",
     "vnfds": [
       "<updated_id>"
     ],
@@ -213,10 +217,6 @@
     ],
     "vnf_dependency": [
       
-    ],
-    "provider": "T-Nova",
-    "description": "ProxyUC_FULL",
-    "provider_id": "3",
-    "descriptor_version": "1"
+    ]
   }
 }

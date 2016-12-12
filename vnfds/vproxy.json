@@ -1,9 +1,12 @@
 {
   "name": "vpxaas_20161211",
   "provider_id": 4,
-  "descriptor_version": "1",
   "type": "vPXAAS",
   "description": "",
+  "descriptor_version": "1",
+  "provider": "PRIMETEL",
+  "release": "T-NOVA",
+  "version": "1",
   "vdu": [
     {
       "resource_requirements": {
@@ -249,7 +252,6 @@
       ]
     }
   ],
-  "version": "1",
   "vnf_lifecycle_events": [
     {
       "authentication_username": "vagrant",
@@ -261,7 +263,7 @@
       "events": {
         "start": {
           "command": "/home/vagrant/scripts/start",
-          "template_file": "{\"controller\":\"get_attr[vdu0,PublicIp]\"}",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CPrlnh,PublicIp]\", \"vdu0in\":\"get_attr[CP5hhe,fixed_ips,0,ip_address]\", \"vdu0out\":\"get_attr[CPbhov,fixed_ips,0,ip_address]\"}",
           "template_file_format": "JSON"
         },
         "stop": {
@@ -283,8 +285,6 @@
     "model": "PAYG",
     "period": "P1M"
   },
-  "provider": "TEIC",
-  "release": "T-NOVA",
   "vlinks": [
     {
       "leaf_requirement": "Unlimited",

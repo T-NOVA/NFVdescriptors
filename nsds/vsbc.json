@@ -1,8 +1,12 @@
 {
   "nsd": {
-    "name": "vSBC_ITL",
+    "name": "vSBC_ITL_test4",
     "vendor": "3",
     "version": "1",
+    "provider": "T-Nova",
+    "description": "vSBC_descriptor_06122016",
+    "provider_id": "3",
+    "descriptor_version": "1",
     "vnfds": [
       "<updated_id>"
     ],
@@ -189,10 +193,6 @@
     ],
     "vnf_dependency": [
       
-    ],
-    "provider": "T-Nova",
-    "description": "vSBC_descriptor_06122016",
-    "provider_id": "3",
-    "descriptor_version": "1"
+    ]
   }
 }

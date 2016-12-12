@@ -1,5 +1,12 @@
 {
+  "name": "VHG_VIOTECH_16_11_21__16H30",
   "provider_id": 4,
+  "type": "vHG",
+  "description": "VHG_VIOTECH_16_11_21__16H30_2",
+  "descriptor_version": "1",
+  "provider": "VIOTECH",
+  "release": "T-NOVA",
+  "version": "1",
   "vdu": [
     {
       "resource_requirements": {
@@ -900,9 +907,7 @@
       "id": "vdu5"
     }
   ],
-  "name": "VHG_VIOTECH_16_11_21__16H30",
   "trade": false,
-  "descriptor_version": "1",
   "deployment_flavours": [
     {
       "vdu_reference": [
@@ -963,7 +968,6 @@
       ]
     }
   ],
-  "version": "1",
   "vnf_lifecycle_events": [
     {
       "authentication_username": "root",
@@ -1007,8 +1011,6 @@
     },
     "period": ""
   },
-  "provider": "TEIC",
-  "release": "T-NOVA",
   "vlinks": [
     {
       "leaf_requirement": "Unlimited",
@@ -1084,7 +1086,5 @@
       "id": "vl2",
       "qos": ""
     }
-  ],
-  "type": "vHG",
-  "description": "VHG_VIOTECH_16_11_21__16H30_2"
+  ]
 }
