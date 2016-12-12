@@ -1,0 +1,738 @@
+{
+  "provider_id": 6,
+  "vdu": [
+    {
+      "resource_requirements": {
+        "network_interface_bandwidth_unit": "",
+        "hypervisor_parameters": {
+          "version": "10002|12001|2.6.32-358.el6.x86_64",
+          "type": "QEMU-KVM"
+        },
+        "memory_unit": "GB",
+        "network_interface_card_capabilities": {
+          "SR-IOV": true,
+          "mirroring": false
+        },
+        "storage": {
+          "size_unit": "GB",
+          "persistence": false,
+          "size": 80
+        },
+        "network_interface_bandwidth": "",
+        "platform_pcie_parameters": {
+          "SR-IOV": true,
+          "device_pass_through": true
+        },
+        "vcpus": 8,
+        "vswitch_capabilities": {
+          "version": "2.0",
+          "type": "ovs",
+          "overlay_tunnel": "GRE"
+        },
+        "data_processing_acceleration_library": "",
+        "memory": 18,
+        "memory_parameters": {
+          "large_pages_required": false,
+          "numa_allocation_policy": ""
+        },
+        "cpu_support_accelerator": "AES-NI"
+      },
+      "bootstrap_script": "#!/bin/bash\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n  kill -9 $PID_DHCLIENT\nfi\nrm -f /var/lib/dhclient/dhclient.leases\ndhclient eth0\nwhile [ `ls -l /var/lib/dhclient/dhclient.leases | awk '{print $5}'` -lt 100 ]\ndo\n  sleep 1\ndone\nsleep 10\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n  kill -9 $PID_DHCLIENT\nfi\nlinea=`grep -n \"eth0\" /var/lib/dhclient/dhclient.leases | awk ' { print $1 } ' | tr -d \":\" `\nlet linea+=1\nmng_ip=`head -n $linea /var/lib/dhclient/dhclient.leases | tail -1 | awk ' { print $2 } ' | tr -d \";\" `\necho \"IP OAM : $mng_ip\" > /etc/result_cloud_init\nmng_ip_par=$mng_ip\nMIB_PATH=/usr/local/etc/\nPATH_XML=/e/GoAhead/xmlconfEM\nXML_UPDATE=/usr/local/bin/CI_xml_update\nMIB_TAG=ITL-SR-MIB.tag\nMIB_XML=ITL-SR-MIB.xml.new\nOAMPATH=/d/5/39\nPATHWILDFLY=wildfly-8.2.0.Final/standalone/configuration/reload_data\nOM_MIB_XML=$OAMPATH/$PATHWILDFLY/atcaplatc_itl-bpcmngr_1_mibimage.xml\ncp -f $MIB_PATH/$MIB_TAG $MIB_PATH/$MIB_XML\nif [ $? == 1 ]; then\n  logger \"RUN_CHANGE_HTTPIP: ERROR cp -f $MIB_PATH/$MIB_TAG $MIB_PATH/$MIB_XML\"\n  exit 121\nfi\nMNG_FIP=$mng_ip_par/28\nMNG_GW=172.22.48.33\nlogger \"RUN_CHANGE_HTTPIP: Started with $mng_ip_par/27 172.22.48.33\"\nRET=$($XML_UPDATE $MIB_PATH/$MIB_XML $MNG_FIP $MNG_GW)\nif [ $? == 1 ]; then\n  logger \"RUN_CHANGE_HTTPIP: ERROR Invalid XML UPDATE FAILED \"\n  exit 1\nfi\ncp -f $PATH_XML/ITL-SR-MIB.xml $PATH_XML/ITL-SR-MIB.xml.$$\nif [ $? == 1 ]; then\n  logger \"RUN_CHANGE_HTTPIP: ERROR cp -f $PATH_XML/ITL-SR-MIB.xml $PATH_XML/ITL-SR-MIB.xml.$$\"\n  exit 1\nfi\ncp -f $MIB_PATH/$MIB_XML $PATH_XML/ITL-SR-MIB.xml\nif [ $? == 1 ]; then\n  logger \"RUN_CHANGE_HTTPIP: ERROR cp -f $MIB_PATH/$MIB_XML $PATH_XML/ITL-SR-MIB.xml\"\n  exit 1\nfi\nlogger \"RUN_CHANGE_HTTPIP: Finished with mng_ip_par mng_gw_par\"\ncp -f $PATH_XML/ITL-SR-MIB.xml $OM_MIB_XML\nsed -i \"s/\\\"ATCA\\\"/\\\"ATCA\\\" xmlns=\\\"http:\\/\\/italtel.com\\/datamodeldefinition\\/p16\\/mibgen\\\"/\" $OM_MIB_XML\ncp /var/lib/cloud/data/instance-id /etc/instance-id-cloudinit\necho \"$(curl -s http://169.254.169.254/openstack/latest/meta_data.json | sed -e 's/.*\"uuid\": \"//; s/\".*//')\" > /tmp/instance_uuid\ncp -f /tmp/instance_uuid /etc/instance-id\ncp -f /etc/collectd.conf.or /etc/collectd.conf\nsed -i s/id_instance_number/`cat /etc/instance-id`/g  /etc/collectd.conf\nsed -i s/ip_oem_instance/$mng_ip_par/g  /etc/collectd.conf                                    \necho \"wc_notify --data-binary '{\\\"status\\\": \\\"SUCCESS\\\"}'\" > /home/Italtel/wcnotify_temp\nnumatt=1\nstringatotale=\"\"\nfor attributo in `cat /home/Italtel/wcnotify_temp`\ndo\n   case $numatt in\n       6 | 9 | 12 ) partestr=\"'$attributo\" ;;\n       7 | 10 | 13 ) partestr=\"$attributo'\" ;;\n       *)            partestr=\"$attributo\" ;;\n   esac\n   let numatt+=1\n   stringatotale=\"$stringatotale $partestr\"\ndone\nifconfig eth0 mtu 1400\nifconfig eth1 mtu 1400\nifconfig eth2 mtu 1400\nifconfig eth3 mtu 1400\nifconfig eth4 mtu 1400\nifconfig eth5 mtu 1400\nifconfig eth6 mtu 1400\n/usr/local/bin/clear_obs_files\necho \"sleep 180\" > /home/Italtel/wcnotify_rit\ncat /usr/local/bin/check_SU_and_RL.sh >> /home/Italtel/wcnotify_rit\ncat /home/Italtel/wcnotify_temp >> /home/Italtel/wcnotify_rit\necho \"service collectd restart\" >> /home/Italtel/wcnotify_rit\necho \"/usr/local/bin/check_bgw_uuid.sh\" >> /home/Italtel/wcnotify_rit\nchmod +x /home/Italtel/wcnotify_rit\n/home/Italtel/wcnotify_rit &",
+      "alias": "OAM_vSBC",
+      "vm_image_format": "qcow2",
+      "networking_resources": "",
+      "monitoring_parameters_specific": [
+        {
+          "metric": "total_sip_sessions",
+          "unit": "INT",
+          "desc": "Total SIP Sessions"
+        },
+        {
+          "metric": "rtp_pack_in",
+          "unit": "INT",
+          "desc": "RTP pack IN"
+        },
+        {
+          "metric": "rtp_pack_out",
+          "unit": "INT",
+          "desc": "RTP pack OUT"
+        },
+        {
+          "metric": "rtp_pack_in_byte",
+          "unit": "Byte",
+          "desc": "RTP pack in byte IN"
+        },
+        {
+          "metric": "rtp_pack_out_byte",
+          "unit": "Byte",
+          "desc": "RTP pack in byte OUT"
+        },
+        {
+          "metric": "rtp_frame_loss",
+          "unit": "INT",
+          "desc": "RTP frame loss"
+        },
+        {
+          "metric": "average_latency",
+          "unit": "Msec",
+          "desc": "Average Latency (RTP delay)"
+        },
+        {
+          "metric": "max_latency",
+          "unit": "Msec",
+          "desc": "Max Latency (RTP delay)"
+        },
+        {
+          "metric": "average_interarrival_jitter",
+          "unit": "Msec",
+          "desc": "Average Interarrival Jitter"
+        },
+        {
+          "metric": "max_interarrival_jitter",
+          "unit": "Msec",
+          "desc": "Max Interarrival Jitter"
+        },
+        {
+          "metric": "number_of_in_transcoding",
+          "unit": "INT",
+          "desc": "Number of IN Transcoding"
+        },
+        {
+          "metric": "number_of_out_transcoding",
+          "unit": "INT",
+          "desc": "Number of OUT Transcoding"
+        },
+        {
+          "metric": "number_of_in_transrating",
+          "unit": "INT",
+          "desc": "Number of OUT Transrating"
+        },
+        {
+          "metric": "number_of_out_transrating",
+          "unit": "INT",
+          "desc": "Number of OUT Transrating"
+        }
+      ],
+      "wc_notify": false,
+      "vm_image": "http://10.10.1.167:8080/NFS/files/vSBC_OAM_0612.qcow2",
+      "controller": true,
+      "connection_points": [
+        {
+          "vlink_ref": "vl0",
+          "id": "CP5qyx"
+        },
+        {
+          "vlink_ref": "vl1",
+          "id": "CPo1aw"
+        },
+        {
+          "vlink_ref": "vl2",
+          "id": "CP7sea"
+        },
+        {
+          "vlink_ref": "vl3",
+          "id": "CPlho7"
+        },
+        {
+          "vlink_ref": "vl4",
+          "id": "CPi75b"
+        },
+        {
+          "vlink_ref": "vl5",
+          "id": "CP5o0p"
+        },
+        {
+          "vlink_ref": "vl6",
+          "id": "CPq0ya"
+        }
+      ],
+      "monitoring_parameters": [
+        {
+          "metric": "fsfree",
+          "unit": "GB",
+          "desc": "Free Storage"
+        },
+        {
+          "metric": "memfree",
+          "unit": "MB",
+          "desc": "Free Memory"
+        },
+        {
+          "metric": "network_incoming",
+          "unit": "Mbps",
+          "desc": "Network Incoming"
+        },
+        {
+          "metric": "network_outgoing",
+          "unit": "Mbps",
+          "desc": "Network Outgoing"
+        },
+        {
+          "metric": "load_shortterm",
+          "unit": "%",
+          "desc": "Load Average (1 Minute)"
+        },
+        {
+          "metric": "load_midterm",
+          "unit": "%",
+          "desc": "Load Average (5 Minutes)"
+        },
+        {
+          "metric": "load_longterm",
+          "unit": "%",
+          "desc": "Load Average (15 Minutes)"
+        },
+        {
+          "metric": "processes_blocked",
+          "unit": "INT",
+          "desc": "Blocked Processes"
+        },
+        {
+          "metric": "processes_paging",
+          "unit": "INT",
+          "desc": "Paging Processes"
+        },
+        {
+          "metric": "processes_running",
+          "unit": "INT",
+          "desc": "Running Processes"
+        },
+        {
+          "metric": "processes_sleeping",
+          "unit": "INT",
+          "desc": "Sleeping Processes"
+        },
+        {
+          "metric": "processes_stopped",
+          "unit": "INT",
+          "desc": "Stopped Processes"
+        },
+        {
+          "metric": "processes_zombie",
+          "unit": "INT",
+          "desc": "Zombie Processes"
+        }
+      ],
+      "scale_in_out": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "vm_image_md5": "f18e1d126360c9809deab54b7a011c24",
+      "id": "vdu0"
+    },
+    {
+      "resource_requirements": {
+        "network_interface_bandwidth_unit": "",
+        "hypervisor_parameters": {
+          "version": "10002|12001|2.6.32-358.el6.x86_64",
+          "type": "QEMU-KVM"
+        },
+        "memory_unit": "GB",
+        "network_interface_card_capabilities": {
+          "SR-IOV": true,
+          "mirroring": false
+        },
+        "storage": {
+          "size_unit": "GB",
+          "persistence": false,
+          "size": 80
+        },
+        "network_interface_bandwidth": "",
+        "platform_pcie_parameters": {
+          "SR-IOV": true,
+          "device_pass_through": true
+        },
+        "vcpus": 8,
+        "vswitch_capabilities": {
+          "version": "2.0",
+          "type": "ovs",
+          "overlay_tunnel": "GRE"
+        },
+        "data_processing_acceleration_library": "",
+        "memory": 4,
+        "memory_parameters": {
+          "large_pages_required": false,
+          "numa_allocation_policy": ""
+        },
+        "cpu_support_accelerator": "AES-NI"
+      },
+      "bootstrap_script": "#!/bin/bash\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n   kill -9 $PID_DHCLIENT\nfi\nrm -f /var/lib/dhclient/dhclient.leases\ndhclient eth0\nwhile [ `ls -l /var/lib/dhclient/dhclient.leases | awk '{print $5}'` -lt 100 ]\ndo\n   sleep 1\ndone\nsleep 10\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n   kill -9 $PID_DHCLIENT\nfi\nlinea=`grep -n \"eth0\" /var/lib/dhclient/dhclient.leases | awk ' { print $1 } ' | tr -d \":\" `\nlet linea+=1\nmng_ip=`head -n $linea /var/lib/dhclient/dhclient.leases | tail -1 | awk ' { print $2 } ' | tr -d \";\" `\nip a add $mng_ip/28 dev eth0\ngrep -q \"ListenAddress $mng_ip\" /etc/ssh/sshd_config  >& /dev/null\nif [ $? -ne 0 ]\nthen\n   echo \"\" >> /etc/ssh/sshd_config\n   echo \"ListenAddress $mng_ip\" >> /etc/ssh/sshd_config\n   echo \"\" >> /etc/ssh/sshd_config\nfi\necho \"IP BGW ETH0: $mng_ip\" > /etc/result_cloud_init\nrm -f /var/lib/dhclient/dhclient.leases\ndhclient eth3\nwhile [ `ls -l /var/lib/dhclient/dhclient.leases | awk '{print $5}'` -lt 100 ]\ndo\n   sleep 1\ndone\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n   kill -9 $PID_DHCLIENT\nfi\nsleep 10\nlinea=`grep -n \"eth3\" /var/lib/dhclient/dhclient.leases | awk ' { print $1 } ' | tr -d \":\" `\nlet linea+=1\nnetm='29'\nmng_ip=`head -n $linea /var/lib/dhclient/dhclient.leases | tail -1 | awk ' { print $2 } ' | tr -d \";\" `\necho \"IP BGW ETH3: $mng_ip\" >> /etc/result_cloud_init\nrm -f /var/lib/dhclient/dhclient.leases\ndhclient eth0\nwhile [ `ls -l /var/lib/dhclient/dhclient.leases | awk '{print $5}'` -lt 100 ]\ndo\n   sleep 1\ndone\nsleep 10\nPID_DHCLIENT=`ps axf | grep dhclient | grep -v grep | awk ' { print $1 }'`\nif [ ! -z $PID_DHCLIENT ]\nthen\n   kill -9 $PID_DHCLIENT\nfi\nrm -f /var/lib/dhclient/dhclient.leases\nif [ $mng_ip == \"172.22.48.82\" ]\nthen\n  /atcahome/ife/mountrw\n  echo \"SLOT=2\" >> /Configuration/ATCA-CONF/shelf_slot.cfg\n  /atcahome/ife/mountro\n  echo \"IP: 172.22.48.82 -> Non faccio niente!!!\" >> /etc/result_cloud_init\nfi\nif [ $mng_ip == \"172.22.48.83\" ]\nthen\n  /atcahome/ife/mountrw\n  echo \"SLOT=2\" >> /Configuration/ATCA-CONF/shelf_slot.cfg\n  /atcahome/ife/mountro\n  echo \"IP: 172.22.48.83 -> Non faccio niente!!!\" >> /etc/result_cloud_init\nfi\nif [ $mng_ip == \"172.22.48.84\" ]\nthen\n  echo \"Creazione link a direttori : /d/258/ /d/259/ /d/260/ /d/261/ /d/262/ \" >> /etc/result_cloud_init\n  echo \"Cambio slot da 2 a 3\" >> /etc/result_cloud_init\n  /atcahome/ife/mountrw\n  echo \"SLOT=3\" >> /Configuration/ATCA-CONF/shelf_slot.cfg\n  /atcahome/ife/mountro\nfi                                             \nif [ $mng_ip == \"172.22.48.85\" ]\nthen\n  echo \"Creazione link a direttori : /d/258/ /d/259/ /d/260/ /d/261/ /d/262/ \" >> /etc/result_cloud_init\n  echo \"Cambio slot da 2 a 3\" >> /etc/result_cloud_init\n  /atcahome/ife/mountrw\n  echo \"SLOT=3\" >> /Configuration/ATCA-CONF/shelf_slot.cfg\n  /atcahome/ife/mountro\nfi                                             \nif [ $mng_ip == \"172.22.48.86\" ]\nthen\n  echo \"Creazione link a direttori : /d/258/ /d/259/ /d/260/ /d/261/ /d/262/ \" >> /etc/result_cloud_init\n  echo \"Cambio slot da 2 a 3\" >> /etc/result_cloud_init\n  /atcahome/ife/mountrw\n  echo \"SLOT=3\" >> /Configuration/ATCA-CONF/shelf_slot.cfg\n  /atcahome/ife/mountro\nfi                                             \ncp /var/lib/cloud/data/instance-id /etc/instance-id-cloudinit\necho \"$(curl -s http://169.254.169.254/openstack/latest/meta_data.json | sed -e 's/.*\"uuid\": \"//; s/\".*//')\" > /tmp/instance_uuid\ncp -f /tmp/instance_uuid /etc/instance-id\ncp -f /etc/collectd.conf.or /etc/collectd.conf\nsed -i s/id_instance_number/`cat /etc/instance-id`/g  /etc/collectd.conf\nsed -i s/ip_oem_instance/$mng_ip/g  /etc/collectd.conf\necho \"wc_notify --data-binary '{\\\"status\\\": \\\"SUCCESS\\\"}'\" > /home/Italtel/wcnotify_temp\nnumatt=1\nstringatotale=\"\"\nfor attributo in `cat /home/Italtel/wcnotify_temp`\ndo\n   case $numatt in\n       6 | 9 | 12 ) partestr=\"'$attributo\" ;;\n       7 | 10 | 13 ) partestr=\"$attributo'\" ;;\n       *)            partestr=\"$attributo\" ;;\n   esac\n   let numatt+=1\n   stringatotale=\"$stringatotale $partestr\"\ndone\nifconfig eth0 mtu 1400\nifconfig eth1 mtu 1400\nifconfig eth2 mtu 1400\nifconfig eth3 mtu 1400\nifconfig eth4 mtu 1400\necho \"sleep 180\" > /home/Italtel/wcnotify_rit\ncat /home/Italtel/wcnotify_temp >> /home/Italtel/wcnotify_rit\nchmod +x /home/Italtel/wcnotify_rit\n/home/Italtel/wcnotify_rit &",
+      "alias": "BGW_vSBC",
+      "vm_image_format": "qcow2",
+      "networking_resources": "",
+      "monitoring_parameters_specific": [
+        {
+          "metric": "total_sip_sessions",
+          "unit": "INT",
+          "desc": "Total SIP Sessions"
+        },
+        {
+          "metric": "rtp_pack_in",
+          "unit": "INT",
+          "desc": "RTP pack IN"
+        },
+        {
+          "metric": "rtp_pack_out",
+          "unit": "INT",
+          "desc": "RTP pack OUT"
+        },
+        {
+          "metric": "rtp_pack_in_byte",
+          "unit": "Byte",
+          "desc": "RTP pack in byte IN"
+        },
+        {
+          "metric": "rtp_pack_out_byte",
+          "unit": "Byte",
+          "desc": "RTP pack in byte OUT"
+        },
+        {
+          "metric": "rtp_frame_loss",
+          "unit": "INT",
+          "desc": "RTP frame loss"
+        },
+        {
+          "metric": "average_latency",
+          "unit": "Msec",
+          "desc": "Average Latency (RTP delay)"
+        },
+        {
+          "metric": "max_latency",
+          "unit": "Msec",
+          "desc": "Max Latency (RTP delay)"
+        },
+        {
+          "metric": "average_interarrival_jitter",
+          "unit": "Msec",
+          "desc": "Average Interarrival Jitter"
+        },
+        {
+          "metric": "max_interarrival_jitter",
+          "unit": "Msec",
+          "desc": "Max Interarrival Jitter"
+        },
+        {
+          "metric": "number_of_in_transcoding",
+          "unit": "INT",
+          "desc": "Number of IN Transcoding"
+        },
+        {
+          "metric": "number_of_out_transcoding",
+          "unit": "INT",
+          "desc": "Number of OUT Transcoding"
+        },
+        {
+          "metric": "number_of_in_transrating",
+          "unit": "INT",
+          "desc": "Number of OUT Transrating"
+        },
+        {
+          "metric": "number_of_out_transrating",
+          "unit": "INT",
+          "desc": "Number of OUT Transrating"
+        }
+      ],
+      "wc_notify": false,
+      "vm_image": "http://10.10.1.167:8080/NFS/files/vSBC_BGW_1011.qcow2",
+      "controller": false,
+      "connection_points": [
+        {
+          "vlink_ref": "vl0",
+          "id": "CP4urk"
+        },
+        {
+          "vlink_ref": "vl1",
+          "id": "CPbqcl"
+        },
+        {
+          "vlink_ref": "vl2",
+          "id": "CP64hb"
+        },
+        {
+          "vlink_ref": "vl7",
+          "id": "CPfkpn"
+        },
+        {
+          "vlink_ref": "vl8",
+          "id": "CPq70r"
+        }
+      ],
+      "monitoring_parameters": [
+        {
+          "metric": "cpuidle",
+          "unit": "%",
+          "desc": "CPU Idle"
+        },
+        {
+          "metric": "cpu_util",
+          "unit": "%",
+          "desc": "CPU Utilization"
+        },
+        {
+          "metric": "fsfree",
+          "unit": "GB",
+          "desc": "Free Storage"
+        },
+        {
+          "metric": "memfree",
+          "unit": "MB",
+          "desc": "Free Memory"
+        },
+        {
+          "metric": "network_incoming",
+          "unit": "Mbps",
+          "desc": "Network Incoming"
+        },
+        {
+          "metric": "network_outgoing",
+          "unit": "Mbps",
+          "desc": "Network Outgoing"
+        },
+        {
+          "metric": "load_shortterm",
+          "unit": "%",
+          "desc": "Load Average (1 Minute)"
+        },
+        {
+          "metric": "load_midterm",
+          "unit": "%",
+          "desc": "Load Average (5 Minutes)"
+        },
+        {
+          "metric": "load_longterm",
+          "unit": "%",
+          "desc": "Load Average (15 Minutes)"
+        },
+        {
+          "metric": "processes_blocked",
+          "unit": "INT",
+          "desc": "Blocked Processes"
+        },
+        {
+          "metric": "processes_paging",
+          "unit": "INT",
+          "desc": "Paging Processes"
+        },
+        {
+          "metric": "processes_running",
+          "unit": "INT",
+          "desc": "Running Processes"
+        },
+        {
+          "metric": "processes_sleeping",
+          "unit": "INT",
+          "desc": "Sleeping Processes"
+        },
+        {
+          "metric": "processes_stopped",
+          "unit": "INT",
+          "desc": "Stopped Processes"
+        },
+        {
+          "metric": "processes_zombie",
+          "unit": "INT",
+          "desc": "Zombie Processes"
+        }
+      ],
+      "scale_in_out": {
+        "minimum": 1,
+        "maximum": 2
+      },
+      "vm_image_md5": "e2e7bd299386a6d066a82b4b455b7a0d",
+      "id": "vdu1"
+    }
+  ],
+  "name": "vSBC_ITL",
+  "created_at": "2016-12-06T10:23:26Z",
+  "modified_at": "2016-12-06T10:23:26Z",
+  "trade": false,
+  "descriptor_version": "1",
+  "deployment_flavours": [
+    {
+      "vdu_reference": [
+        "vdu0",
+        "vdu1"
+      ],
+      "constraint": "",
+      "flavour_key": "gold",
+      "vlink_reference": [
+        "vl0",
+        "vl1",
+        "vl2",
+        "vl3",
+        "vl4",
+        "vl5",
+        "vl6",
+        "vl7",
+        "vl8"
+      ],
+      "id": "flavor0",
+      "assurance_parameters": [
+        {
+          "violation": [
+            {
+              "interval": 60,
+              "breaches_count": 2
+            }
+          ],
+          "value": 70,
+          "penalty": {
+            "expression": 5,
+            "unit": "%",
+            "validity": "P1D"
+          },
+          "formula": "cpu_util GT 70",
+          "rel_id": "param0",
+          "id": "cpu_util",
+          "unit": "%"
+        },
+        {
+          "violation": [
+            {
+              "interval": 60,
+              "breaches_count": 2
+            }
+          ],
+          "value": 20,
+          "penalty": {
+            "expression": 5,
+            "type": "Discount",
+            "unit": "%",
+            "validity": "P1D"
+          },
+          "formula": "cpu_util LT 20",
+          "rel_id": "param1",
+          "id": "cpu_util",
+          "unit": "%"
+        }
+      ]
+    }
+  ],
+  "version": "1",
+  "vnf_lifecycle_events": [
+    {
+      "authentication_username": "italtel",
+      "driver": "http",
+      "authentication_type": "HTTPBasicAuth",
+      "authentication": "tnovatnova",
+      "authentication_port": 8080,
+      "vnf_container": "/vnf_api/vSBC/",
+      "events": {
+        "start": {
+          "command": "POST /vnf_api/vSBC/config",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CP5qyx,PublicIp]\",\"vdu1\":\"get_attr[vdu1,vdus]\",\"locip_vupl0\":\"get_attr[CPfkpn,fixed_ips,0,ip_address]\",\"extip_vupl0\":\"get_attr[vdu1,CPfkpn,PublicIp]\",\"locip_vupl1\":\"get_attr[CPq70r,fixed_ips,0,ip_address]\",\"extip_vupl1\":\"get_attr[vdu1,CPq70r,PublicIp]\"}",
+          "template_file_format": "JSON"
+        },
+        "stop": {
+          "command": "PUT /vnf_api/vSBC/config",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CP5qyx,PublicIp]\",\"vdu1\":\"get_attr[vdu1,vdus]\",\"locip_vupl0\":\"get_attr[CPfkpn,fixed_ips,0,ip_address]\",\"extip_vupl0\":\"get_attr[vdu1,CPfkpn,PublicIp]\",\"locip_vupl1\":\"get_attr[CPq70r,fixed_ips,0,ip_address]\",\"extip_vupl1\":\"get_attr[vdu1,CPq70r,PublicIp]\"}",
+          "template_file_format": "JSON"
+        },
+        "scaling_out": {
+          "command": "POST /vnf_api/vSBC/scale_out",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CP5qyx,PublicIp]\",\"vdu1\":\"get_attr[vdu1,vdus]\",\"locip_vupl0\":\"get_attr[CPfkpn,fixed_ips,0,ip_address]\",\"extip_vupl0\":\"get_attr[vdu1,CPfkpn,PublicIp]\",\"locip_vupl1\":\"get_attr[CPq70r,fixed_ips,0,ip_address]\",\"extip_vupl1\":\"get_attr[vdu1,CPq70r,PublicIp]\"}",
+          "template_file_format": "JSON"
+        },
+        "scaling_in": {
+          "command": "POST /vnf_api/vSBC/scale_in",
+          "template_file": "{\"controller\":\"get_attr[vdu0,CP5qyx,PublicIp]\",\"vdu1\":\"get_attr[vdu1,vdus]\",\"locip_vupl0\":\"get_attr[CPfkpn,fixed_ips,0,ip_address]\",\"extip_vupl0\":\"get_attr[vdu1,CPfkpn,PublicIp]\",\"locip_vupl1\":\"get_attr[CPq70r,fixed_ips,0,ip_address]\",\"extip_vupl1\":\"get_attr[vdu1,CPq70r,PublicIp]\"}",
+          "template_file_format": "JSON"
+        }
+      },
+      "flavor_id_ref": "flavor0"
+    }
+  ],
+  "billing_model": {
+    "price": {
+      "setup": 6,
+      "max_per_period": 100,
+      "min_per_period": 100,
+      "unit": "EUR"
+    },
+    "model": "PAYG",
+    "period": "P1D"
+  },
+  "provider": "ITALTEL",
+  "release": "T-NOVA",
+  "vlinks": [
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0",
+        "vdu1"
+      ],
+      "alias": "vSBC_MNG",
+      "connection_points_reference": [
+        "CP5qyx",
+        "CP4urk"
+      ],
+      "net_segment": "172.22.48.32/28",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl0",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0",
+        "vdu1"
+      ],
+      "alias": "vSBC_PRIV_A",
+      "connection_points_reference": [
+        "CPo1aw",
+        "CPbqcl"
+      ],
+      "net_segment": "10.1.0.0/16",
+      "access": false,
+      "external_access": false,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl1",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0",
+        "vdu1"
+      ],
+      "alias": "vSBC_PRIV_B",
+      "connection_points_reference": [
+        "CP7sea",
+        "CP64hb"
+      ],
+      "net_segment": "10.2.0.0/16",
+      "access": false,
+      "external_access": false,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl2",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0"
+      ],
+      "alias": "vSBC_OAM_VUPL0",
+      "connection_points_reference": [
+        "CPlho7"
+      ],
+      "net_segment": "172.22.48.64/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl3",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0"
+      ],
+      "alias": "vSBC_OAM_VUPL1",
+      "connection_points_reference": [
+        "CPi75b"
+      ],
+      "net_segment": "172.22.48.72/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl4",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0"
+      ],
+      "alias": "vSBC_OAM_VUPL2",
+      "connection_points_reference": [
+        "CP5o0p"
+      ],
+      "net_segment": "172.22.48.96/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl5",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu0"
+      ],
+      "alias": "vSBC_OAM_VUPL3",
+      "connection_points_reference": [
+        "CPq0ya"
+      ],
+      "net_segment": "172.22.48.104/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl6",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu1"
+      ],
+      "alias": "vSBC_BGW_VUPL0",
+      "connection_points_reference": [
+        "CPfkpn"
+      ],
+      "net_segment": "172.22.48.80/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl7",
+      "qos": ""
+    },
+    {
+      "leaf_requirement": "10Gbps",
+      "connectivity_type": "E-LINE",
+      "vdu_reference": [
+        "vdu1"
+      ],
+      "alias": "vSBC_BGW_VUPL1",
+      "connection_points_reference": [
+        "CPq70r"
+      ],
+      "net_segment": "172.22.48.112/29",
+      "access": true,
+      "external_access": true,
+      "dhcp": true,
+      "root_requirement": "10Gbps",
+      "port_security_enabled": false,
+      "id": "vl8",
+      "qos": ""
+    }
+  ],
+  "type": "vSBC",
+  "description": "Italtel_vSBC_Descriptor_06_12_2016"
+}
