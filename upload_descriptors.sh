@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import json
 import requests
 
@@ -34,7 +35,7 @@ for descriptor in descriptors:
 	#replace id in NSD
 	file = open(descriptor['nsd'])
 	contents = file.read()
-	replaced_contents = contents.replace('<updated_id>', str(vnfd['id']))
+	replaced_contents = contents.replace('<vnfd_id>', str(vnfd['id']))
 
 	token = auth("sp1")
 	headers = {'content-type': 'application/json', 'Authorization': 'JWT ' + token}
@@ -42,6 +43,14 @@ for descriptor in descriptors:
 	#upload NSD to Marketplace
 	url = 'http://10.10.1.90/service-catalog/service/catalog/'
 	response = requests.post(url, data=replaced_contents, headers=headers)
+	if response.status_code == 409:
+		print response.text
+		# remove vnfd
+		token = auth("fp1")
+		headers = {'content-type': 'application/json', 'Authorization': 'JWT ' + token}
+		url = 'http://10.10.1.90/vnfs/' + str(vnfd['id']) + '/'
+		response = requests.delete(url, headers=headers)
+		sys.exit()
 	nsd = response.json()
 
 	print "New NSD: %s" % nsd['nsd']['id']

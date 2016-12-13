@@ -1,9 +1,12 @@
 {
   "name": "vTC-12122016",
+  "provider_id": 4,
   "type": "vTC",
   "description": "vTC-12122016",
   "descriptor_version": "1",
-  "provider_id": 4,
+  "provider": "TEIC",
+  "release": "T-NOVA",
+  "version": "1",
   "vdu": [
     {
       "resource_requirements": {
@@ -234,7 +237,6 @@
       ]
     }
   ],
-  "version": "1",
   "vnf_lifecycle_events": [
     {
       "authentication_username": "ubuntu",
@@ -268,8 +270,6 @@
     "model": "PAYG",
     "period": "P5W"
   },
-  "provider": "TEIC",
-  "release": "T-NOVA",
   "vlinks": [
     {
       "leaf_requirement": "Unlimited",

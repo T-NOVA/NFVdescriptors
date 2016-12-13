@@ -8,7 +8,7 @@
     "provider_id": "3",
     "descriptor_version": "1",
     "vnfds": [
-      "<updated_id>"
+      "<vnfd_id>"
     ],
     "vnffgd": {
       "vnffgs": [
@@ -29,13 +29,13 @@
               ],
               "connection_points": [
                 "ns_ext_data",
-                "VNF#<updated_id>:ext_data",
+                "VNF#<vnfd_id>:ext_data",
                 "ns_ext_mgnt",
-                "VNF#<updated_id>:ext_mgmt"
+                "VNF#<vnfd_id>:ext_mgmt"
               ],
               "constituent_vnfs": [
                 {
-                  "vnf_ref_id": "<updated_id>",
+                  "vnf_ref_id": "<vnfd_id>",
                   "vnf_flavor_key_ref": "gold"
                 }
               ]
@@ -47,7 +47,7 @@
     "lifecycle_events": {
       "start": [
         {
-          "vnf_id": "<updated_id>",
+          "vnf_id": "<vnfd_id>",
           "vnf_event": "start",
           "event_rel_id": "rel_le0",
           "event_id": "le0",
@@ -93,7 +93,7 @@
             "burst": ""
           },
           "connections": [
-            "VNF#<updated_id>:ext_data"
+            "VNF#<vnfd_id>:ext_data"
           ],
           "connectivity_type": "E-LINE",
           "external_access": true,
@@ -111,7 +111,7 @@
             "burst": ""
           },
           "connections": [
-            "VNF#<updated_id>:ext_mgmt"
+            "VNF#<vnfd_id>:ext_mgmt"
           ],
           "connectivity_type": "E-LINE",
           "external_access": true,
@@ -125,7 +125,7 @@
         "id": "sla0",
         "assurance_parameters": [
           {
-            "formula": "MAX(VNF:<updated_id>.cpu_util)",
+            "formula": "MAX(VNF:<vnfd_id>.cpu_util)",
             "id": "cpu_util",
             "name": "cpu_util",
             "penalty": {
@@ -145,7 +145,7 @@
             "uid": "ap0"
           },
           {
-            "formula": "MAX(VNF:<updated_id>.httpnum)",
+            "formula": "MAX(VNF:<vnfd_id>.httpnum)",
             "id": "httpnum",
             "name": "httpnum",
             "penalty": {
@@ -165,7 +165,7 @@
             "uid": "ap1"
           },
           {
-            "formula": "MAX(VNF:<updated_id>.load_shortterm)",
+            "formula": "MAX(VNF:<vnfd_id>.load_shortterm)",
             "id": "load_shortterm",
             "name": "load_shortterm",
             "penalty": {
@@ -198,7 +198,7 @@
             "number_of_instances": 1,
             "redundancy_model": "Active",
             "vnf_flavour_id_reference": "gold",
-            "vnf_reference": "<updated_id>"
+            "vnf_reference": "<vnfd_id>"
           }
         ],
         "sla_key": "basic"
